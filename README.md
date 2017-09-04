@@ -1,6 +1,10 @@
 # findbolig-api
 A python web-scraper that automates the process of finding your placements on www.findbolig.nu. 
 
+## Dependencies
+
+You will need the python-modules: beautifulsoup4, requests and grequests.
+
 ## How to use
 
 First you need to download findbolig-api.py and put it in inside your working directory. Now you can import:
