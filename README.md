@@ -29,3 +29,6 @@ The extracted variable is a list of dictionaries in the form:
 If you want, you can save the results as a csv-file:
     
     fb.save_csv(extracted)
+
+## Important
+You should know that it takes a very long time for the extract function to complete. I have tried to help the problem by using grequests so I could get the data asynchronously, but it still takes a long time. I don't really know how to make it faster at this point.
