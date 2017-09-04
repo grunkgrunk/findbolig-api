@@ -11,7 +11,7 @@ First you need to download findbolig-api.py and put it in inside your working di
 
     import findbolig-api as fb
   
-Now you can use the module to login and extract the contents of www.findbolig.nu.
+Now you can use the module to login to your findbolig account and extract the contents of www.findbolig.nu.
 
     session = fb.login(username, password)
     extracted = fb.extract(session)
