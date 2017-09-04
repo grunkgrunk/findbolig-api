@@ -18,6 +18,14 @@ Now you can use the module to login and extract the contents of www.findbolig.nu
     
 The extracted variable is a list of dictionaries in the form:
 
+    [{
+        'Adresse': 'Lundtoftegade', 
+        'Opskrivninger': '17 boliger', 
+        'Ejendomsnavn': 'Lundtoftegade', 
+        'Postnummer': '2400 København NV', 
+        'Rank': 122
+      }, ...]
+
 If you want, you can save the results as a csv-file:
     
     fb.save_csv(extracted)
