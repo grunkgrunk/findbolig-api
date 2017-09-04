@@ -16,7 +16,7 @@ Now you can use the module to login and extract the contents of www.findbolig.nu
     session = fb.login(username, password)
     extracted = fb.extract(session)
     
-The extracted variable is a list of dictionaries in the form:
+The "extracted" variable now holds a list of dictionaries in the form:
 
     [{
         'Adresse': 'Lundtoftegade', 
