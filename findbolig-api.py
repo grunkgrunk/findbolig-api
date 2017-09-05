@@ -1,3 +1,4 @@
+# coding=utf-8
 import requests, grequests
 from bs4 import BeautifulSoup
 import re
