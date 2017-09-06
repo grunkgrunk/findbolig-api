@@ -7,16 +7,16 @@ You will need the python-modules: beautifulsoup4 and requests.
 
 ## How to use
 
-First you need to download findbolig-api.py and put it in inside your working directory. Now you can import:
+First you need to download findbolig.py and put it in inside your working directory. Now you can import:
 
     import findbolig as fb
   
 Now you can use the module to login to your findbolig account and extract the contents of www.findbolig.nu.
 
     session = fb.login(username, password)
-    extracted = fb.extract(session)
+    extracted = fb.extract(session, verbose=False)
     
-The "extracted" variable now holds a list of dictionaries in the form:
+The extracted function takes very long to complete. If you are afraid that the program does not work because nothing happens after the extract function is called, you can just pass true to the second parameter of the function. This will make the function print some info whenever it retrieves ranks from the site. The "extracted" variable now holds a list of dictionaries in the form:
 
     [{
         'Adresse': 'Lundtoftegade', 
@@ -25,6 +25,8 @@ The "extracted" variable now holds a list of dictionaries in the form:
         'Postnummer': '2400 København NV', 
         'Rank': 122
       }, ...]
+
+The result is sorted by rank from lowest to highest.
 
 If you want, you can save the results as a csv-file:
     
