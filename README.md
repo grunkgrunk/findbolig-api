@@ -33,4 +33,4 @@ If you want, you can save the results as a csv-file:
     fb.save_csv(extracted)
 
 ## Why it's slow
-You should know that it takes a very long time for the extract function to complete. This is because the site is very slow to respond when asked for the rankings. It is also slow 
+You should know that it takes a very long time for the extract function to complete. This is because the site is very slow to respond when asked for the rankings. It is also slow because the ranks are retrieved one by one. 
