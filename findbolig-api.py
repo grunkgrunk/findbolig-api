@@ -1,4 +1,4 @@
-import requests, grequests
+import requests
 from bs4 import BeautifulSoup
 import re
 import csv
@@ -38,7 +38,7 @@ def login(username, password):
 
 
 
-def extract(session):
+def extract(session, verbose=False):
     waiting_list = 'https://www.findbolig.nu/Findbolig-nu/Min-side/ventelisteboliger/opskrivninger?'
     page = session.get(
         waiting_list,
@@ -58,6 +58,9 @@ def extract(session):
     names_soup = soup.find_all("td", {"align":"left", "style":"width:170px;"})
     p = re.compile('0">.*</f')
 
+    if verbose:
+        print("Getting names, postal-code, address, etc.")
+
     names = []
     for name in names_soup:
         res = p.findall(str(name))[0]
@@ -66,19 +69,19 @@ def extract(session):
         names.append(res[3:-3])
 
 
-    adress_soup = soup.find_all("td", {"align":"left", "style":"width:185px;"})
+    address_soup = soup.find_all("td", {"align":"left", "style":"width:185px;"})
     p = re.compile('0">.*<br/>')
     # this edge case might happen some time in the future aswell for one
     # of the other properties
     p2 = re.compile(">.*\.\.\.<br/")
-    adresses = []
-    for adr in adress_soup:
+    addresses = []
+    for adr in address_soup:
         res = p.findall(str(adr))
         if len(res) != 0:
-            adresses.append(res[0][3:-5])
+            addresses.append(res[0][3:-5])
         else:
             res = p2.findall(str(adr))
-            adresses.append(res[0][1:-4])
+            addresses.append(res[0][1:-4])
 
 
     p = re.compile("bid=(\d+)")
@@ -96,9 +99,10 @@ def extract(session):
     # the apartments
     placement = "https://www.findbolig.nu/Services/WaitlistService.asmx/GetWaitlistRank"
 
-    # we dump all requests in this list so we can make
-    # an asynchronous request with grequests.
-    rs = []
+    if verbose:
+        print("Getting ranks. This take a long time.")
+    # we get the ranks, one after one
+    ranks = []
 
     for i,bid in enumerate(bids):
         data = {
@@ -107,32 +111,26 @@ def extract(session):
         headers = {
 			'Content-Type': 'application/json; charset=UTF-8'
 		}
-        rs.append(grequests.post(
-                placement,
-                data=json.dumps(data),
-                headers=headers,
-                session=session
-            )
-        )
 
+        response = session.post(placement, data=json.dumps(data), headers=headers)
 
-    responses = grequests.map(rs)
-    ranks = []
-    for r in responses:
-        dic = r.json()
-        # if we got a rank we append the rank,
-        # otherwise we append "???"
+        dic = response.json()
         rank = "???"
         if dic["d"] and dic["d"]["WaitPlacement"]:
+            #ranks.append(dic["d"]["WaitPlacement"])
             rank = dic["d"]["WaitPlacement"]
         ranks.append(rank)
+
+        if verbose:
+            print(names[i] + ", " + "RANK: " + str(rank))
+
 
     # build list that contains all content
     extracted = []
     for i in range(len(names)):
         o = {}
         o["Ejendomsnavn"] = names[i]
-        o["Adresse"] = adresses[i]
+        o["addresse"] = addresses[i]
         o["Postnummer"] = postal[i]
         o["Opskrivninger"] = boliger[i]
         o["Rank"] = ranks[i]
@@ -156,23 +154,22 @@ def save_csv(extracted):
     filename = "output-" + timestr + ".csv"
 
     with open(filename, 'w') as csvfile:
-        fieldnames = ["Rank", "Ejendomsnavn", "Adresse", "Postnummer", "Opskrivninger", timestr]
+        fieldnames = ["Rank", "Ejendomsnavn", "addresse", "Postnummer", "Opskrivninger", timestr]
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 
         writer.writeheader()
         for d in extracted:
             writer.writerow(d)
 
-
-
     return open(filename, 'r')
 
 def test():
-    username = 'someusername'
-    password = 'somepassword'
-
+    username = "foo"
+    password = "bar"
+    print("running")
     session = login(username, password)
-    extracted = extract(session)
+    print("logged in", session)
+    extracted = extract(session, True)
 
     print(extracted)
     save_csv(extracted)
