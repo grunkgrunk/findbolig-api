@@ -35,7 +35,7 @@ def main():
     sd = BlockingScheduler()
 
     print("Press Ctrl+C to quit")
-    interval = input("At which interval(minutes) do you want to check Nybolig.dk? (Enter a number!) ")
+    interval = input("At which interval(minutes) do you want to check findbolig.dk? (Enter a number!) ")
     if interval.isdigit():
         print("Setting up with interval of " + interval + " minutes")
         print("Starting")
