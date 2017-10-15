@@ -2,7 +2,7 @@
 A python web-scraper that automates the process of finding your placements on www.findbolig.nu. 
 
 ## Dependencies
-You will need the python 3 and python-modules: beautifulsoup4 and requests.
+You will need python 3 and python-modules: beautifulsoup4 and requests.
 
 ## How to use
 First you need to download findbolig.py and put it in inside your working directory. Now you can import:
